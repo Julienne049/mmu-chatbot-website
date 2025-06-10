@@ -1,10 +1,288 @@
+
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>MMU University Chatbot</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MMU Chatbot</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background-color: #f0f4f8;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #00274d;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .sidebar h3 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .sidebar button {
+      background-color: #004080;
+      color: white;
+      border: none;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background-color: #00274d;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chatbox {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background-color: #eaf2fb;
+    }
+    .input-area {
+      display: flex;
+      padding: 15px;
+      background-color: white;
+      border-top: 1px solid #ccc;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .input-area button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .message {
+      margin-bottom: 15px;
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 10px;
+      background-color: #d9ecff;
+    }
+    .message.user {
+      margin-left: auto;
+      background-color: #bbdefb;
+    }
+
+    /* Welcome Box */
+    .welcome {
+      background-color: #e0f2ff;
+      border-left: 5px solid #004080;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+    }
+    .welcome h4 {
+      margin-top: 0;
+    }
+    .quick-options button {
+      margin: 6px 6px 0 0;
+      padding: 8px 12px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Faculty buttons */
+    .faculty-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .faculty-buttons button {
+      background-color: #0059b3;
+      color: white;
+      margin: 5px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* SPM checker box */
+    .spm-checker {
+      background-color: #f2f9ff;
+      padding: 10px;
+      border: 1px dashed #004080;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    .spm-checker label {
+      margin-right: 5px;
+    }
+    .spm-checker select {
+      margin-right: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+    }
+    
+  </style>
 </head>
 <body>
-  <h1>Welcome to MMU University Chatbot!</h1>
-  <p>This will be the homepage for your chatbot project.</p>
+
+  <div class="sidebar">
+<div style="text-align: center;">
+  <img src="https://creative.mmu.edu.my/wp-content/uploads/2024/06/img-ebee@2x.png" alt="MMU Ebee" style="width: 70%; margin-bottom: 3px; border-radius: 10px;" />
+</div>
+  <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 10px; color: white; text-align: center;">
+  Select Topic
+</h3>
+  <button onclick="sendTopic('Programs & Courses')">🎓 Programs & Courses</button>
+  <button onclick="sendTopic('Check SPM Eligibility')">📊 Check SPM Eligibility</button>
+  <button onclick="sendTopic('Admissions')">📝 Admissions</button>
+  <button onclick="sendTopic('Campus Info')">🏫 Campus Info</button>
+  <button onclick="sendTopic('Facilities')">🏢 Facilities</button>
+  <button onclick="sendTopic('Accommodation')">🏨 Accommodation</button>
+  <button onclick="sendTopic('Scholarships')">💰 Scholarships</button>
+  <button onclick="sendTopic('Contact Info')">📞 Contact Info</button>
+</div>
+
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h2>MMU Chatbot</h2>
+      <div class="status">🟢 Online</div>
+    </div>
+
+    <div class="chatbox" id="chatWindow">
+      <div class="welcome">
+        <h4>👋 Hello! I'm your <b>MMU Assistant</b>.</h4>
+        <p>I can help you with information about Multimedia University's Cyberjaya and Melaka campuses.</p>
+        <ul>
+          <li>Type your question in the chat</li>
+          <li>Select a topic from the menu</li>
+          <li>Choose from these quick options below</li>
+        </ul>
+        <div class="quick-options">
+          <button onclick="sendTopic('Admission Info')">Admission Info</button>
+          <button onclick="sendTopic('Programs & Courses')">Programs & Courses</button>
+          <button onclick="sendTopic('Campus Facilities')">Campus Facilities</button>
+          <button onclick="sendTopic('Tuition Fees')">Tuition Fees</button>
+        </div>
+      </div>
+
+      <div class="spm-checker" id="spmChecker" style="display:none;">
+        <h4>Manual SPM Result Checker:</h4>
+        <label>Bahasa Malaysia:</label>
+        <select id="bm"><option>A</option><option>B+</option><option>C+</option><option>Not Taken</option></select>
+        <label>English:</label>
+        <select id="english"><option>A</option><option>B+</option><option>C+</option><option>Not Taken</option></select>
+        <label>Mathematics:</label>
+        <select id="maths"><option>A</option><option>B+</option><option>C+</option><option>Not Taken</option></select>
+        <label>Science:</label>
+        <select id="science"><option>A</option><option>B+</option><option>C+</option><option>Not Taken</option></select>
+        <button onclick="checkSPM()">Check Eligible Programs</button>
+      </div>
+
+      <!-- Chat messages will be added here -->
+    </div>
+
+    <div class="faculty-buttons">
+      <button onclick="sendTopic('Faculty of Computing')">Faculty of Computing</button>
+      <button onclick="sendTopic('Faculty of Engineering')">Faculty of Engineering</button>
+      <button onclick="sendTopic('Faculty of Business')">Faculty of Business</button>
+      <button onclick="sendTopic('Faculty of Law')">Faculty of Law</button>
+      <button onclick="sendTopic('Faculty of Creative Multimedia')">Faculty of Creative Multimedia</button>
+      <button onclick="sendTopic('Faculty of Management')">Faculty of Management</button>
+    </div>
+
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (!message) return;
+      appendMessage("user", message);
+      sendToBot(message);
+      input.value = "";
+    }
+
+    function appendMessage(sender, message) {
+      const chatWindow = document.getElementById("chatWindow");
+      const msg = document.createElement("div");
+      msg.classList.add("message", sender);
+      msg.innerHTML = message;
+      chatWindow.appendChild(msg);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function sendToBot(message) {
+      fetch("/get_response", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_message: message })
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          appendMessage("bot", data.response);
+        })
+        .catch(() => {
+          appendMessage("bot", "❌ Error: Failed to get response.");
+        });
+    }
+
+    function sendTopic(topic) {
+      if (topic.includes("SPM Eligibility")) {
+        document.getElementById("spmChecker").style.display = "block";
+        appendMessage("bot", "📊 Please select your SPM grades below and click 'Check Eligible Programs'.");
+      } else {
+        document.getElementById("spmChecker").style.display = "none";
+        appendMessage("user", topic);
+        sendToBot(topic);
+      }
+    }
+
+    function checkSPM() {
+      const bm = document.getElementById("bm").value;
+      const english = document.getElementById("english").value;
+      const maths = document.getElementById("maths").value;
+      const science = document.getElementById("science").value;
+
+      const query = `SPM Results: BM=${bm}, English=${english}, Maths=${maths}, Science=${science}`;
+      appendMessage("user", query);
+      sendToBot(query);
+    }
+  </script>
+
 </body>
 </html>
